@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryManager.API.Persistence.Migrations
 {
     [DbContext(typeof(LibraryManagerDbContext))]
-    [Migration("20250217013642_PrimeiraMigration")]
+    [Migration("20250218153418_PrimeiraMigration")]
     partial class PrimeiraMigration
     {
         /// <inheritdoc />
@@ -73,7 +73,7 @@ namespace LibraryManager.API.Persistence.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DevolutionDate")
+                    b.Property<DateTime>("DeadLineDevolutionDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("IdBook")
@@ -88,10 +88,12 @@ namespace LibraryManager.API.Persistence.Migrations
                     b.Property<bool>("IsReturned")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime?>("ReturnedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("IdBook")
-                        .IsUnique();
+                    b.HasIndex("IdBook");
 
                     b.HasIndex("IdUser");
 
@@ -128,8 +130,8 @@ namespace LibraryManager.API.Persistence.Migrations
             modelBuilder.Entity("LibraryManager.API.Entities.Loan", b =>
                 {
                     b.HasOne("LibraryManager.API.Entities.Book", "Book")
-                        .WithOne("Loan")
-                        .HasForeignKey("LibraryManager.API.Entities.Loan", "IdBook")
+                        .WithMany("Loans")
+                        .HasForeignKey("IdBook")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -146,7 +148,7 @@ namespace LibraryManager.API.Persistence.Migrations
 
             modelBuilder.Entity("LibraryManager.API.Entities.Book", b =>
                 {
-                    b.Navigation("Loan");
+                    b.Navigation("Loans");
                 });
 
             modelBuilder.Entity("LibraryManager.API.Entities.User", b =>

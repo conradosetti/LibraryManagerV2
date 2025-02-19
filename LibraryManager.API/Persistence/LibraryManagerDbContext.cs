@@ -27,8 +27,8 @@ public class LibraryManagerDbContext(DbContextOptions<LibraryManagerDbContext> o
                 .HasForeignKey(l=>l.IdUser)
                 .OnDelete(DeleteBehavior.Restrict);
             e.HasOne(l => l.Book)
-                .WithOne(b => b.Loan)
-                .HasForeignKey<Loan>(l => l.IdBook);
+                .WithMany(b => b.Loans)
+                .HasForeignKey(l => l.IdBook);
         });
         
         base.OnModelCreating(builder);

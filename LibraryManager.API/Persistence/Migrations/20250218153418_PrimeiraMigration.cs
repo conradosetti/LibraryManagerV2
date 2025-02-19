@@ -55,7 +55,8 @@ namespace LibraryManager.API.Persistence.Migrations
                     IdUser = table.Column<int>(type: "int", nullable: false),
                     IdBook = table.Column<int>(type: "int", nullable: false),
                     IsReturned = table.Column<bool>(type: "bit", nullable: false),
-                    DevolutionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeadLineDevolutionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReturnedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -79,8 +80,7 @@ namespace LibraryManager.API.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_IdBook",
                 table: "Loans",
-                column: "IdBook",
-                unique: true);
+                column: "IdBook");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Loans_IdUser",

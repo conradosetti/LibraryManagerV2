@@ -7,17 +7,26 @@ public class Loan : BaseEntity
     public int IdBook { get; private set; }
     public Book Book { get; private set; }
     public bool IsReturned { get; private set; } = false;
-    public DateTime DevolutionDate { get; private set; }
+    public DateTime DeadLineDevolutionDate { get; private set; }
+    public DateTime? ReturnedDate { get; private set; } = null;
 
-    public Loan(int idUser, int idBook, DateTime devolutionDate) : base()
+    public Loan(int idUser, int idBook, DateTime deadLineDevolutionDate) : base()
     {
         IdUser = idUser;
         IdBook = idBook;
-        DevolutionDate = devolutionDate;
+        DeadLineDevolutionDate = deadLineDevolutionDate;
+    }
+
+    public void ReturnBook()
+    {
+        IsReturned = true;
+        ReturnedDate = DateTime.Now;
     }
     
     public bool IsLate()
     {
-        return DateTime.Now >= DevolutionDate;
+        if(!IsReturned)
+            return DateTime.Now >= DeadLineDevolutionDate;
+        return ReturnedDate.HasValue && ReturnedDate.Value >= DeadLineDevolutionDate;
     }
 }
