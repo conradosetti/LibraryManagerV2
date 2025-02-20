@@ -1,84 +1,59 @@
-﻿using LibraryManager.API.Entities;
-using LibraryManager.API.Models;
-using LibraryManager.API.Persistence;
+﻿using LibraryManager.Application.Models;
+using LibraryManager.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
 
-public class BookController(LibraryManagerDbContext context) : ControllerBase
+public class BookController(IBookService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAllBooks(string search = "")
+    public async Task<IActionResult> GetAll(string search = "")
     {
-        var books = await context.Books
-            .Where
-                (b => (search == "" || b.Title.Contains(search) || b.Author.Contains(search)) && !b.IsDeleted)
-            .ToListAsync();
-        var model = books.Select(b => BooksViewModel.FromEntity(b)).ToList();
-        return Ok(model);
+        var result = await service.GetAllBooksAsync(search);
+        return Ok(result);
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetBookById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var book = await context.Books
-            .Include(b => b.Loans)
-            .SingleOrDefaultAsync(b => b.Id == id && !b.IsDeleted);
-        if (book == null)
-            return NotFound();
-        var model = SingleBookViewModel.FromEntity(book);
-        return Ok(model);
+        var result = await service.GetBookByIdAsync(id);
+        if (!result.IsSuccess)
+            return NotFound(result.Message);
+        return Ok(result);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateBook([FromBody]CreateBookInputModel inputModel)
+    public async Task<IActionResult> Create(CreateBookInputModel model)
     {
-        var book = inputModel.ToEntity();
-        await context.Books.AddAsync(book);
-        await context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetBookById), new {id = book.Id}, inputModel);
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+        
+        var result = await service.CreateBookAsync(model);
+        if (!result.IsSuccess)
+            return BadRequest(result.Message);
+        
+        var createdBook = await service.GetBookByIdAsync(result.Data); // Fetch the created book
+        if (createdBook == null)
+            return StatusCode(500, "Book was created but could not be retrieved.");
+        
+        var locationUrl = Url.Action(nameof(GetById), new { id = result.Data });
+        return Created(locationUrl, createdBook);
     }
 
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteBook(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var book = await context.Books
-            .SingleOrDefaultAsync(b => b.Id == id || !b.IsDeleted);
-        if (book == null)
-            return NotFound();
-        book.SetAsDeleted();
-        context.Books.Update(book);
-        await context.SaveChangesAsync();
-        return NoContent();
+        var result = await service.DeleteBookAsync(id);
+        return result.IsSuccess ? NoContent() : NotFound(result.Message);
     }
 
     [HttpPut("{id:int}/return-loan")]
-    public async Task<IActionResult> GiveBackBook(int id)
+    public async Task<IActionResult> GiveBack(int id)
     {
-        var book = await context.Books
-                .Include(b => b.Loans)
-                .SingleOrDefaultAsync(b => b.Id == id && !b.IsDeleted);
-        if (book == null)
-            return NotFound();
-        if(!book.IsBorrowed)
-            return BadRequest("Book is not borrowed");
-        var loan = await context.Loans.SingleOrDefaultAsync(l=>l.IdBook == id && !l.IsReturned);
-        book.ChangeStatus();
-        context.Books.Update(book);
-        if (loan.IsLate())
-        {
-            loan.ReturnBook();
-            context.Loans.Update(loan);
-            await context.SaveChangesAsync();
-            return Ok("Loan is late");
-        }
-        loan.ReturnBook();
-        context.Loans.Update(loan);
-        await context.SaveChangesAsync();
-        return Ok("Loan is on time");
+        var result = await service.GiveBackBookAsync(id);
+        return result.IsSuccess ? NoContent() : BadRequest(result.Message);
     }
 }

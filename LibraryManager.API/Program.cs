@@ -1,4 +1,5 @@
-using LibraryManager.API.Persistence;
+using LibraryManager.Application;
+using LibraryManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = builder.Configuration.GetConnectionString("LibraryManagerCS");
 builder.Services.AddDbContext<LibraryManagerDbContext>
     (o => o.UseSqlServer(connectionString));
+builder.Services.AddApplication();
 
 
 builder.Services.AddControllers();
