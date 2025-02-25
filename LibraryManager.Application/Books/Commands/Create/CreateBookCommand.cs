@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Domain.Entities;
+using MediatR;
 
-namespace LibraryManager.Application.Models;
+namespace LibraryManager.Application.Books.Commands.Create;
 
-public class CreateBookInputModel
+public class CreateBookCommand : IRequest<ResultViewModel<int>>
 {
     [Required(ErrorMessage = "Title is required.")]
     public string Title { get; set; }
@@ -14,5 +16,5 @@ public class CreateBookInputModel
     public DateTime PublishDate { get; set; }
     
     public Book ToEntity()=>
-    new Book(Title, Author, Isbn, PublishDate);
+        new Book(Title, Author, Isbn, PublishDate);
 }

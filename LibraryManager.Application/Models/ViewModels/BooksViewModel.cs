@@ -1,6 +1,4 @@
-﻿using LibraryManager.Domain.Entities;
-
-namespace LibraryManager.Application.Models;
+﻿namespace LibraryManager.Application.Models.ViewModels;
 
 public class BooksViewModel
 {
@@ -16,6 +14,6 @@ public class BooksViewModel
         IsBorrowed = isBorrowed;
     }
     
-    public static BooksViewModel FromEntity(Book book)=>
+    public static BooksViewModel FromEntity(Domain.Entities.Book book)=>
     new (book.Title, book.Author, book.IsBorrowed? "Borrowed Book" : "Not Borrowed Book");
 }

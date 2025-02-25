@@ -1,4 +1,5 @@
-using LibraryManager.Application.Models;
+using LibraryManager.Application.Models.InputModels;
+using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 

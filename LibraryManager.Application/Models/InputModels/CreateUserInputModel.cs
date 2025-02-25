@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using LibraryManager.Domain.Entities;
 
-namespace LibraryManager.Application.Models;
+namespace LibraryManager.Application.Models.InputModels;
 
 public class CreateUserInputModel
 {

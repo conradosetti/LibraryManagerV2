@@ -1,4 +1,4 @@
-﻿namespace LibraryManager.Application.Models;
+﻿namespace LibraryManager.Application.Models.ViewModels;
 
 public class ResultViewModel(bool isSuccess = true, string message = "")
 {

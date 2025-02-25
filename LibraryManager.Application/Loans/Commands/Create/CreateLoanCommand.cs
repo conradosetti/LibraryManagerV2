@@ -1,8 +1,10 @@
-﻿using LibraryManager.Domain.Entities;
+﻿using LibraryManager.Application.Models.ViewModels;
+using LibraryManager.Domain.Entities;
+using MediatR;
 
-namespace LibraryManager.Application.Models;
+namespace LibraryManager.Application.Loans.Commands.Create;
 
-public class CreateLoanInputModel
+public class CreateLoanCommand : IRequest<ResultViewModel<List<int>>>
 {
     public int[] IdBooks { get; set; }
     public int IdUser { get; set; }

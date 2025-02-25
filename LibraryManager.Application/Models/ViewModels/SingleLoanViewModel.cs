@@ -1,6 +1,6 @@
 ﻿using LibraryManager.Domain.Entities;
 
-namespace LibraryManager.Application.Models;
+namespace LibraryManager.Application.Models.ViewModels;
 
 public class SingleLoanViewModel(string bookName, string userName, string isReturned, string isLate)
 {

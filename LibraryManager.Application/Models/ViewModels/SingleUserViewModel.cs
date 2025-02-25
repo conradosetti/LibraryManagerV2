@@ -1,6 +1,6 @@
 ﻿using LibraryManager.Domain.Entities;
 
-namespace LibraryManager.Application.Models;
+namespace LibraryManager.Application.Models.ViewModels;
 
 public class SingleUserViewModel(string name, string email, (string, DateTime)[] books)
 {

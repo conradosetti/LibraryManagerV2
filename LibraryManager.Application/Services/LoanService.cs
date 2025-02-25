@@ -1,10 +1,11 @@
-using LibraryManager.Application.Models;
+using LibraryManager.Application.Models.InputModels;
+using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Services;
 
-public class LoansService(LibraryManagerDbContext context) : ILoanService
+public class LoanService(LibraryManagerDbContext context) : ILoanService
 {
     public async Task<ResultViewModel<SingleLoanViewModel>> GetLoanById(int id)
     {
@@ -19,7 +20,7 @@ public class LoansService(LibraryManagerDbContext context) : ILoanService
         return ResultViewModel<SingleLoanViewModel>.Success(model);
     }
 
-    public async Task<ResultViewModel<List<LoansViewModel>>> GetAllLoans(string search = "")
+    public async Task<ResultViewModel<List<LoansViewModel>>> ListLoans(string search = "")
     {
         var loans = await context.Loans
             .Include(l => l.Book)

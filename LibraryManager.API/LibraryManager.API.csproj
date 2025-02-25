@@ -18,7 +18,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\LibraryManager.Application\LibraryManager.Application.csproj" />
-      <ProjectReference Include="..\LibraryManager.Domain\LibraryManager.Domain.csproj" />
       <ProjectReference Include="..\LibraryManager.Infrastructure\LibraryManager.Infrastructure.csproj" />
     </ItemGroup>
 

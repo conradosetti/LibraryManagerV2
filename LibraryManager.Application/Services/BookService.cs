@@ -1,4 +1,5 @@
-using LibraryManager.Application.Models;
+using LibraryManager.Application.Models.InputModels;
+using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,7 @@ namespace LibraryManager.Application.Services;
 
 public class BookService(LibraryManagerDbContext context) : IBookService
 {
-    public async Task<ResultViewModel<List<BooksViewModel>>> GetAllBooksAsync(string search ="")
+    public async Task<ResultViewModel<List<BooksViewModel>>> ListBooksAsync(string search ="")
     {
         var books = await context.Books
             .Where

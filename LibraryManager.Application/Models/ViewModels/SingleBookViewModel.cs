@@ -1,6 +1,4 @@
-﻿using LibraryManager.Domain.Entities;
-
-namespace LibraryManager.Application.Models;
+﻿namespace LibraryManager.Application.Models.ViewModels;
 
 public class SingleBookViewModel( 
     string title,
@@ -17,7 +15,8 @@ public class SingleBookViewModel(
     public string IsBorrowed { get; private set; } = isBorrowed;
     public DateTime? DevolutionDate { get; private set; } = devolutionDate;
 
-    public static SingleBookViewModel FromEntity(Book book)
+    public static SingleBookViewModel FromEntity(Domain.Entities.
+        Book book)
     {
         var devolutionDate = book.Loans.SingleOrDefault(l => l.IdBook == book.Id && !l.IsReturned)?.DeadLineDevolutionDate;
         return new SingleBookViewModel(book.Title, book.Author, book.Isbn, book.PublishDate,
