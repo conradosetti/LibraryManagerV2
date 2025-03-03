@@ -2,15 +2,24 @@
 
 namespace LibraryManager.Application.Models.ViewModels;
 
-public class SingleUserViewModel(string name, string email, (string, DateTime)[] books)
+public class SingleUserViewModel(string name, string email, LoanedBookViewModel[] books)
 {
     public string Name { get; set; } = name;
     public string Email { get; set; } = email;
-    public (string, DateTime)[] Books { get; set; } = books;
+    public LoanedBookViewModel[] Books { get; set; } = books;
 
     public static SingleUserViewModel FromEntity(User user)
     {
-        (string, DateTime)[] books = user.Loans.Select(l => (l.Book.Title, l.CreatedAt)).ToArray();
+        var books = user.Loans
+            .Select(l => new LoanedBookViewModel(l.Book.Title, l.CreatedAt))
+            .ToArray();
         return new SingleUserViewModel(user.Name, user.Email, books);
     }
 }
+
+public class LoanedBookViewModel(string title, DateTime loanDate)
+{
+    public string Title { get; init; } = title;
+    public DateTime LoanDate { get; init; } = loanDate;
+}
+

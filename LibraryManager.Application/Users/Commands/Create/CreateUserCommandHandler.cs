@@ -1,17 +1,16 @@
 ﻿using LibraryManager.Application.Models.ViewModels;
-using LibraryManager.Infrastructure.Persistence;
+using LibraryManager.Domain.Repositories;
 using MediatR;
 
 namespace LibraryManager.Application.Users.Commands.Create;
 
-public class CreateUserCommandHandler(LibraryManagerDbContext context)
+public class CreateUserCommandHandler( IUserRepository repository)
 : IRequestHandler<CreateUserCommand, ResultViewModel<int>>
 {
     public async Task<ResultViewModel<int>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var user = request.ToEntity();
-        await context.Users.AddAsync(user, cancellationToken);
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.AddUserAsync(user);
         
         return ResultViewModel<int>.Success(user.Id);
     }

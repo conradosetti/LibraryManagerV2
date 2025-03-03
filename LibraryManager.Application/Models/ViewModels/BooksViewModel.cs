@@ -2,18 +2,20 @@
 
 public class BooksViewModel
 {
+    public int Id { get; private set; }
     public string Title { get; private set; }
     public string Author { get; private set; }
-    public string IsBorrowed { get; private set; }
+    public int? BorrowerId { get; private set; }
     
 
-    public BooksViewModel(string title, string author, string isBorrowed)
+    public BooksViewModel(int id, string title, string author, int? borrowerId)
     {
+        Id = id;
         Title = title;
         Author = author;
-        IsBorrowed = isBorrowed;
+        BorrowerId = borrowerId;
     }
     
     public static BooksViewModel FromEntity(Domain.Entities.Book book)=>
-    new (book.Title, book.Author, book.IsBorrowed? "Borrowed Book" : "Not Borrowed Book");
+    new (book.Id, book.Title, book.Author, book.CurrentLoan?.IdUser);
 }

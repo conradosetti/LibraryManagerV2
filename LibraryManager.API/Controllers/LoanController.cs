@@ -22,7 +22,7 @@ public class LoanController(IMediator mediator) : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAll(string search = "")
+    public async Task<IActionResult> List(string search = "")
     {
         //var result = await service.ListLoans(search);
         var result = await mediator.Send(new ListLoansQuery(search));

@@ -1,22 +1,19 @@
 ﻿using LibraryManager.Application.Models.ViewModels;
-using LibraryManager.Infrastructure.Persistence;
+using LibraryManager.Domain.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Application.Books.Commands.Delete;
 
-public class DeleteBookCommandHandler(LibraryManagerDbContext context)
+public class DeleteBookCommandHandler(IBookRepository repository)
 : IRequestHandler<DeleteBookCommand, ResultViewModel>
 {
     public async Task<ResultViewModel> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await context.Books
-            .SingleOrDefaultAsync(b => b.Id == request.Id || !b.IsDeleted, cancellationToken: cancellationToken);
+        var book = await repository.GetBookByIdAsync(request.Id);
         if (book == null)
             return ResultViewModel.Error("Book not found");
         book.SetAsDeleted();
-        context.Books.Update(book);
-        await context.SaveChangesAsync(cancellationToken);
+        await repository.UpdateBookAsync(book);
         
         return ResultViewModel.Success();
     }

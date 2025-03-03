@@ -1,20 +1,16 @@
 using LibraryManager.Application;
-using LibraryManager.Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+using LibraryManager.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddApplication()
+    .AddInfrastructure(builder.Configuration);
+
 // Adiciona o Swagger ao container de serviços
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-var connectionString = builder.Configuration.GetConnectionString("LibraryManagerCS");
-builder.Services.AddDbContext<LibraryManagerDbContext>
-    (o => o.UseSqlServer(connectionString));
-builder.Services.AddApplication();
-
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

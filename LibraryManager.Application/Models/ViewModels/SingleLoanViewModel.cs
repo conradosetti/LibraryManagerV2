@@ -2,15 +2,30 @@
 
 namespace LibraryManager.Application.Models.ViewModels;
 
-public class SingleLoanViewModel(string bookName, string userName, string isReturned, string isLate)
+public class SingleLoanViewModel(
+    string bookName, 
+    string userName, 
+    DateOnly deadLineDevolutionDate, 
+    bool isReturned, 
+    bool isLate, 
+    DateOnly? returnedDate)
 {
-    public string BookName { get; private set; } = bookName;
-    public string UserName { get; private set; } = userName;
-    public string IsReturned { get; private set; } = isReturned;
-    public string IsLate { get; private set; } = isLate;
+    public string BookName { get; } = bookName;
+    public string UserName { get; } = userName;
+    public DateOnly DeadLineDevolutionDate { get; } = deadLineDevolutionDate;
+    public bool IsReturned { get; } = isReturned;
+    public bool IsLate { get; } = isLate;
+    public DateOnly? ReturnedDate { get; } = returnedDate;
 
     public static SingleLoanViewModel FromEntity(Loan loan)
     {
-        return new SingleLoanViewModel(loan.Book.Title, loan.User.Name, loan.IsReturned ? "Book was returned" : "Still borrowed book", loan.IsLate() ? "Late" : "Not late");
+        return new SingleLoanViewModel(
+            loan.Book.Title,
+            loan.User.Name,
+            DateOnly.FromDateTime(loan.DeadLineDevolutionDate),
+            loan.IsReturned,
+            loan.IsLate(),
+            loan.ReturnedDate.HasValue ? DateOnly.FromDateTime(loan.ReturnedDate.Value) : null
+        );
     }
 }

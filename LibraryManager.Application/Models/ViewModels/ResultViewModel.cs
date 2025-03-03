@@ -6,6 +6,7 @@ public class ResultViewModel(bool isSuccess = true, string message = "")
     public string Message { get; private set; } = message;
     
     public static ResultViewModel Success() => new();
+    public static ResultViewModel Success(string message) => new(true, message);
     public static ResultViewModel Error(string message)
         => new(false,  message);
 }

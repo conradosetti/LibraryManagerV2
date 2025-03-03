@@ -1,12 +1,7 @@
-﻿using LibraryManager.Application.Models;
-using LibraryManager.Application.Models.InputModels;
-using LibraryManager.Application.Services;
-using LibraryManager.Application.Users.Commands.Create;
+﻿using LibraryManager.Application.Users.Commands.Create;
 using LibraryManager.Application.Users.Queries.Get;
-using LibraryManager.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.API.Controllers;
 
@@ -14,7 +9,7 @@ namespace LibraryManager.API.Controllers;
 [Route("api/[controller]")]
 [ApiController]
 
-public class UserController(IUserService service, IMediator mediator) : ControllerBase
+public class UserController(IMediator mediator) : ControllerBase
 {
    [HttpGet("{id:int}")]
    public async Task<IActionResult> GetById(int id)

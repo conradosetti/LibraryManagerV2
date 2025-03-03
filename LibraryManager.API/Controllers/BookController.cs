@@ -1,6 +1,6 @@
 ﻿using LibraryManager.Application.Books.Commands.Create;
 using LibraryManager.Application.Books.Commands.Delete;
-using LibraryManager.Application.Books.Commands.GiveBack;
+using LibraryManager.Application.Books.Commands.Return;
 using LibraryManager.Application.Books.Queries.Get;
 using LibraryManager.Application.Books.Queries.List;
 using MediatR;
@@ -44,7 +44,7 @@ public class BookController(IMediator mediator) : ControllerBase
         
         //var createdBook = await service.GetBookByIdAsync(result.Data); // Fetch the created book
         var createdBook = await mediator.Send(new GetBookQuery(result.Data));
-        if (createdBook == null)
+        if (!createdBook.IsSuccess)
             return StatusCode(500, "Book was created but could not be retrieved.");
         
         var locationUrl = Url.Action(nameof(GetById), new { id = result.Data });
@@ -63,7 +63,7 @@ public class BookController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GiveBack(int id)
     {
         //var result = await service.GiveBackBookAsync(id);
-        var result = await mediator.Send(new GivebackBookCommand(id));
-        return result.IsSuccess ? NoContent() : BadRequest(result.Message);
+        var result = await mediator.Send(new ReturnBookCommand(id));
+        return result.IsSuccess ? Ok(result.Message) : BadRequest(result.Message);
     }
 }
