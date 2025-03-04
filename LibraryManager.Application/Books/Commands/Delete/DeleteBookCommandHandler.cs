@@ -9,7 +9,7 @@ public class DeleteBookCommandHandler(IBookRepository repository)
 {
     public async Task<ResultViewModel> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
     {
-        var book = await repository.GetBookByIdAsync(request.Id);
+        var book = await repository.GetBookByIdAsync(request.BookId);
         if (book == null)
             return ResultViewModel.Error("Book not found");
         book.SetAsDeleted();

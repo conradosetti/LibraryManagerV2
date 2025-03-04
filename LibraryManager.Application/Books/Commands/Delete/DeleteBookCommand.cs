@@ -5,5 +5,5 @@ namespace LibraryManager.Application.Books.Commands.Delete;
 
 public class DeleteBookCommand(int id) : IRequest<ResultViewModel>
 {
-    public int Id { get; set; } = id;
+    public int BookId { get; set; } = id;
 }

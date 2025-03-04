@@ -1,4 +1,6 @@
-﻿using LibraryManager.Application.Books.Commands.Create;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using LibraryManager.Application.Books.Commands.Create;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LibraryManager.Application;
@@ -8,8 +10,8 @@ public static class ApplicationModule
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services
-            //.AddServices()
-            .AddHandlers();
+            .AddHandlers()
+            .AddValidators();
         return services;
     }
 
@@ -17,6 +19,14 @@ public static class ApplicationModule
     {
         services.AddMediatR(config =>
             config.RegisterServicesFromAssemblyContaining <CreateBookCommand>());
+        return services;
+    }
+    
+    private static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.AddFluentValidationAutoValidation()
+            .AddValidatorsFromAssemblyContaining<CreateBookCommandValidator>();
+        
         return services;
     }
 }
